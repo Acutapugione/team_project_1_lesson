@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from commands import (
     FILMS_COMMAND, 
     START_COMMAND, 
@@ -15,7 +15,7 @@ from commands import (
     START_BOT_COMMAND,
 )
 from data import get_films
-from keyboards import films_keyboard_markup
+from keyboards import films_keyboard_markup, FilmCallback
 
 
 dp = Dispatcher()
@@ -38,9 +38,12 @@ async def films(message: Message) -> None:
         reply_markup=markup
     )
 
-# @dp.callback_query(StartCallback.filter())
-# async def callb_start(callback: CallbackQuery, callback_data: StartCallback) -> None:
-#     await callback.message.answer(text=f"{callback_data=}")
+@dp.callback_query(FilmCallback.filter())
+async def callb_film(callback: CallbackQuery, callback_data: FilmCallback) -> None:
+    film_id = callback_data.id
+    film_data = get_films(film_id=film_id)
+    
+    await callback.message.answer(text=f"{callback_data=}")
 
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
