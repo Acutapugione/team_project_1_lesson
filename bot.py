@@ -8,6 +8,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
+from commands import FILMS_COMMAND
 
 
 dp = Dispatcher()
@@ -20,6 +21,11 @@ async def start(message: Message) -> None:
         "Я перший бот Python розробника [ПІБ студента]."
     )
 
+@dp.message(FILMS_COMMAND)
+async def films(message: Message) -> None:
+    await message.answer(
+        f"Ви відправили мені команду {message.text}, але її ще не реалізовано"
+    )
 
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
