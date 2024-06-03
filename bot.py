@@ -16,6 +16,8 @@ from commands import (
 )
 from data import get_films
 from keyboards import films_keyboard_markup, FilmCallback
+from models import Film
+from aiogram.types import URLInputFile
 
 
 dp = Dispatcher()
@@ -42,8 +44,22 @@ async def films(message: Message) -> None:
 async def callb_film(callback: CallbackQuery, callback_data: FilmCallback) -> None:
     film_id = callback_data.id
     film_data = get_films(film_id=film_id)
+    film = Film(**film_data)
+
+    text = f"Фільм: {film.name}\n" \
+           f"Опис: {film.description}\n" \
+           f"Рейтинг: {film.rating}\n" \
+           f"Жанр: {film.genre}\n" \
+           f"Актори: {', '.join(film.actors)}\n"
     
-    await callback.message.answer(text=f"{callback_data=}")
+    await callback.message.answer_photo(
+        caption=text, 
+        photo=URLInputFile(
+            film.poster,
+            filename=f"{film.name}_poster.{film.poster.split('.')[-1]}"
+        )
+    )
+
 
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
