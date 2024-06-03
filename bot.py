@@ -9,6 +9,8 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from commands import FILMS_COMMAND
+from data import get_films
+from keyboards import films_keyboard_markup
 
 
 dp = Dispatcher()
@@ -21,11 +23,16 @@ async def start(message: Message) -> None:
         "Я перший бот Python розробника [ПІБ студента]."
     )
 
+
 @dp.message(FILMS_COMMAND)
 async def films(message: Message) -> None:
+    data = get_films()
+    markup = films_keyboard_markup(films_list=data)
     await message.answer(
-        f"Ви відправили мені команду {message.text}, але її ще не реалізовано"
+        f"Перелік фільмів. Натисніть на назву фільму для отримання деталей.",
+        reply_markup=markup
     )
+
 
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
