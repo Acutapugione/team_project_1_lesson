@@ -120,7 +120,7 @@ async def film_poster(message: Message, state: FSMContext) -> None:
     add_film(film.model_dump())
     await state.clear()
     await message.answer(
-        f"Введіть назву фільму.",
+        f"Фільм {film.name} успішно додано!",
         reply_markup=ReplyKeyboardRemove(),
     )
 
@@ -156,6 +156,7 @@ async def main() -> None:
             parse_mode=ParseMode.HTML,
         ),
     )
+    await bot.delete_webhook(drop_pending_updates=True)
     await bot.set_my_commands(BOT_COMMANDS)
     await dp.start_polling(bot)
 
