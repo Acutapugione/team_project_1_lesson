@@ -7,17 +7,18 @@ class FilmCallback(CallbackData, prefix="film", sep=";"):
     name: str
 
 
-
-def films_keyboard_markup(films_list:list[dict], offset:int|None = None, skip:int|None = None):
+def films_keyboard_markup(
+    films_list: list[dict], offset: int | None = None, skip: int | None = None
+):
     """
     Створює клавіатуру на основі отриманого списку фільмів
     Приклад використання
     >>> await message.answer(
-            text="Some text", 
+            text="Some text",
             reply_markup=films_keyboard_markup(films_list)
         )
     """
-    
+
     # Створюємо та налаштовуємо клавіатуру
     builder = InlineKeyboardBuilder()
     builder.adjust(1, repeat=True)
@@ -27,9 +28,6 @@ def films_keyboard_markup(films_list:list[dict], offset:int|None = None, skip:in
 
         callback_data = FilmCallback(id=index, **film_data)
         # Додаємо кнопку до клавіатури
-        builder.button(
-            text=f"{callback_data.name}", 
-            callback_data=callback_data.pack() 
-        )
+        builder.button(text=f"{callback_data.name}", callback_data=callback_data.pack())
     # Повертаємо клавіатуру у вигляді InlineKeyboardMarkup
     return builder.as_markup()
